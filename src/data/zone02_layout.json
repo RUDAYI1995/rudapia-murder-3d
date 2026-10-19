@@ -1,0 +1,1009 @@
+{
+  "schemaVersion": "0.1",
+  "units": "meters",
+  "status": "design_coordinates_not_playtested",
+  "reference": "ref_prototype_layout_graybox_v01.png",
+  "coordinates": {
+    "origin": "hall northwest inner corner",
+    "axes": "X east, Y up, Z south",
+    "north": "-Z"
+  },
+  "imageRegistration": {
+    "status": "approximate_manual_landmarks",
+    "imageSize": [
+      1536,
+      1024
+    ],
+    "hallBoundsPx": [
+      402,
+      106,
+      828,
+      539
+    ],
+    "note": "Image has inconsistent apparent scale; no single pixel-to-meter transform is authoritative."
+  },
+  "design": {
+    "wallThickness": 0.3,
+    "hallWallHeight": 4.5,
+    "roomWallHeight": 3.4,
+    "characterHeight": 1.78,
+    "characterRadius": 0.3,
+    "floors": "single level at Y=0; entrance steps flattened for initial blockout",
+    "doorPolicy": "all open; hinged leaves deferred"
+  },
+  "zones": [
+    {
+      "id": "hall",
+      "name": "중앙 홀",
+      "bounds": {
+        "x": 0,
+        "z": 0,
+        "w": 20,
+        "d": 24
+      },
+      "floorY": 0
+    },
+    {
+      "id": "corridor",
+      "name": "동쪽 복도",
+      "bounds": {
+        "x": 20,
+        "z": 0,
+        "w": 3,
+        "d": 24
+      },
+      "floorY": 0
+    },
+    {
+      "id": "dining",
+      "name": "식당",
+      "bounds": {
+        "x": 23,
+        "z": 0,
+        "w": 16,
+        "d": 9
+      },
+      "floorY": 0
+    },
+    {
+      "id": "kitchen",
+      "name": "주방",
+      "bounds": {
+        "x": 23,
+        "z": 9,
+        "w": 16,
+        "d": 8
+      },
+      "floorY": 0
+    },
+    {
+      "id": "security",
+      "name": "보안실",
+      "bounds": {
+        "x": 23,
+        "z": 17,
+        "w": 8,
+        "d": 7
+      },
+      "floorY": 0
+    },
+    {
+      "id": "utility",
+      "name": "기계실",
+      "bounds": {
+        "x": 31,
+        "z": 17,
+        "w": 8,
+        "d": 7
+      },
+      "floorY": 0
+    },
+    {
+      "id": "foyer",
+      "name": "현관",
+      "bounds": {
+        "x": 8,
+        "z": 24,
+        "w": 4,
+        "d": 6
+      },
+      "floorY": 0
+    },
+    {
+      "id": "courtyard",
+      "name": "앞마당",
+      "bounds": {
+        "x": 0,
+        "z": 30,
+        "w": 26,
+        "d": 14
+      },
+      "floorY": 0
+    },
+    {
+      "id": "east_path",
+      "name": "동쪽 외곽 길",
+      "bounds": {
+        "x": 39,
+        "z": 0,
+        "w": 5,
+        "d": 34
+      },
+      "floorY": 0
+    },
+    {
+      "id": "south_path",
+      "name": "연결 길",
+      "bounds": {
+        "x": 26,
+        "z": 30,
+        "w": 18,
+        "d": 4
+      },
+      "floorY": 0
+    }
+  ],
+  "doors": [
+    {
+      "id": "D01",
+      "connects": [
+        "hall",
+        "corridor"
+      ],
+      "center": {
+        "x": 20,
+        "y": 0,
+        "z": 5
+      },
+      "axis": "z",
+      "width": 1.8,
+      "height": 2.4,
+      "state": "open",
+      "leafCollision": null
+    },
+    {
+      "id": "D02",
+      "connects": [
+        "hall",
+        "corridor"
+      ],
+      "center": {
+        "x": 20,
+        "y": 0,
+        "z": 13
+      },
+      "axis": "z",
+      "width": 1.8,
+      "height": 2.4,
+      "state": "open",
+      "leafCollision": null
+    },
+    {
+      "id": "D03",
+      "connects": [
+        "corridor",
+        "dining"
+      ],
+      "center": {
+        "x": 23,
+        "y": 0,
+        "z": 5
+      },
+      "axis": "z",
+      "width": 1.8,
+      "height": 2.4,
+      "state": "open",
+      "leafCollision": null
+    },
+    {
+      "id": "D04",
+      "connects": [
+        "corridor",
+        "kitchen"
+      ],
+      "center": {
+        "x": 23,
+        "y": 0,
+        "z": 13
+      },
+      "axis": "z",
+      "width": 1.8,
+      "height": 2.4,
+      "state": "open",
+      "leafCollision": null
+    },
+    {
+      "id": "D05",
+      "connects": [
+        "dining",
+        "kitchen"
+      ],
+      "center": {
+        "x": 29,
+        "y": 0,
+        "z": 9
+      },
+      "axis": "x",
+      "width": 1.8,
+      "height": 2.4,
+      "state": "open",
+      "leafCollision": null
+    },
+    {
+      "id": "D06",
+      "connects": [
+        "corridor",
+        "security"
+      ],
+      "center": {
+        "x": 23,
+        "y": 0,
+        "z": 20
+      },
+      "axis": "z",
+      "width": 1.4,
+      "height": 2.4,
+      "state": "open",
+      "leafCollision": null
+    },
+    {
+      "id": "D07",
+      "connects": [
+        "security",
+        "utility"
+      ],
+      "center": {
+        "x": 31,
+        "y": 0,
+        "z": 20
+      },
+      "axis": "z",
+      "width": 1.4,
+      "height": 2.4,
+      "state": "open",
+      "leafCollision": null
+    },
+    {
+      "id": "D08",
+      "connects": [
+        "kitchen",
+        "east_path"
+      ],
+      "center": {
+        "x": 39,
+        "y": 0,
+        "z": 13
+      },
+      "axis": "z",
+      "width": 1.8,
+      "height": 2.4,
+      "state": "open",
+      "leafCollision": null
+    },
+    {
+      "id": "D09",
+      "connects": [
+        "utility",
+        "east_path"
+      ],
+      "center": {
+        "x": 39,
+        "y": 0,
+        "z": 21
+      },
+      "axis": "z",
+      "width": 1.4,
+      "height": 2.4,
+      "state": "open",
+      "leafCollision": null
+    },
+    {
+      "id": "D10",
+      "connects": [
+        "hall",
+        "foyer"
+      ],
+      "center": {
+        "x": 10,
+        "y": 0,
+        "z": 24
+      },
+      "axis": "x",
+      "width": 2.4,
+      "height": 2.4,
+      "state": "open",
+      "leafCollision": null
+    },
+    {
+      "id": "D11",
+      "connects": [
+        "foyer",
+        "courtyard"
+      ],
+      "center": {
+        "x": 10,
+        "y": 0,
+        "z": 30
+      },
+      "axis": "x",
+      "width": 2.4,
+      "height": 2.4,
+      "state": "open",
+      "leafCollision": null
+    },
+    {
+      "id": "D12",
+      "connects": [
+        "courtyard",
+        "outside"
+      ],
+      "center": {
+        "x": 10,
+        "y": 0,
+        "z": 44
+      },
+      "axis": "x",
+      "width": 3,
+      "height": 2.4,
+      "state": "open",
+      "leafCollision": null
+    }
+  ],
+  "walls": [
+    {
+      "id": "north_0",
+      "source": "north",
+      "center": {
+        "x": 19.5,
+        "y": 2.25,
+        "z": 0
+      },
+      "size": {
+        "x": 39,
+        "y": 4.5,
+        "z": 0.3
+      },
+      "collision": "box"
+    },
+    {
+      "id": "west_0",
+      "source": "west",
+      "center": {
+        "x": 0,
+        "y": 2.25,
+        "z": 12
+      },
+      "size": {
+        "x": 0.3,
+        "y": 4.5,
+        "z": 24
+      },
+      "collision": "box"
+    },
+    {
+      "id": "hall_east_0",
+      "source": "hall_east",
+      "center": {
+        "x": 20,
+        "y": 2.25,
+        "z": 2.05
+      },
+      "size": {
+        "x": 0.3,
+        "y": 4.5,
+        "z": 4.1
+      },
+      "collision": "box"
+    },
+    {
+      "id": "hall_east_1",
+      "source": "hall_east",
+      "center": {
+        "x": 20,
+        "y": 2.25,
+        "z": 9
+      },
+      "size": {
+        "x": 0.3,
+        "y": 4.5,
+        "z": 6.2
+      },
+      "collision": "box"
+    },
+    {
+      "id": "hall_east_2",
+      "source": "hall_east",
+      "center": {
+        "x": 20,
+        "y": 2.25,
+        "z": 18.95
+      },
+      "size": {
+        "x": 0.3,
+        "y": 4.5,
+        "z": 10.1
+      },
+      "collision": "box"
+    },
+    {
+      "id": "rooms_west_0",
+      "source": "rooms_west",
+      "center": {
+        "x": 23,
+        "y": 1.7,
+        "z": 2.05
+      },
+      "size": {
+        "x": 0.3,
+        "y": 3.4,
+        "z": 4.1
+      },
+      "collision": "box"
+    },
+    {
+      "id": "rooms_west_1",
+      "source": "rooms_west",
+      "center": {
+        "x": 23,
+        "y": 1.7,
+        "z": 9
+      },
+      "size": {
+        "x": 0.3,
+        "y": 3.4,
+        "z": 6.2
+      },
+      "collision": "box"
+    },
+    {
+      "id": "rooms_west_2",
+      "source": "rooms_west",
+      "center": {
+        "x": 23,
+        "y": 1.7,
+        "z": 16.6
+      },
+      "size": {
+        "x": 0.3,
+        "y": 3.4,
+        "z": 5.4
+      },
+      "collision": "box"
+    },
+    {
+      "id": "rooms_west_3",
+      "source": "rooms_west",
+      "center": {
+        "x": 23,
+        "y": 1.7,
+        "z": 22.35
+      },
+      "size": {
+        "x": 0.3,
+        "y": 3.4,
+        "z": 3.3000000000000007
+      },
+      "collision": "box"
+    },
+    {
+      "id": "east_0",
+      "source": "east",
+      "center": {
+        "x": 39,
+        "y": 1.7,
+        "z": 6.05
+      },
+      "size": {
+        "x": 0.3,
+        "y": 3.4,
+        "z": 12.1
+      },
+      "collision": "box"
+    },
+    {
+      "id": "east_1",
+      "source": "east",
+      "center": {
+        "x": 39,
+        "y": 1.7,
+        "z": 17.1
+      },
+      "size": {
+        "x": 0.3,
+        "y": 3.4,
+        "z": 6.4
+      },
+      "collision": "box"
+    },
+    {
+      "id": "east_2",
+      "source": "east",
+      "center": {
+        "x": 39,
+        "y": 1.7,
+        "z": 22.85
+      },
+      "size": {
+        "x": 0.3,
+        "y": 3.4,
+        "z": 2.3000000000000007
+      },
+      "collision": "box"
+    },
+    {
+      "id": "dining_kitchen_0",
+      "source": "dining_kitchen",
+      "center": {
+        "x": 25.55,
+        "y": 1.7,
+        "z": 9
+      },
+      "size": {
+        "x": 5.100000000000001,
+        "y": 3.4,
+        "z": 0.3
+      },
+      "collision": "box"
+    },
+    {
+      "id": "dining_kitchen_1",
+      "source": "dining_kitchen",
+      "center": {
+        "x": 34.45,
+        "y": 1.7,
+        "z": 9
+      },
+      "size": {
+        "x": 9.099999999999998,
+        "y": 3.4,
+        "z": 0.3
+      },
+      "collision": "box"
+    },
+    {
+      "id": "kitchen_south_0",
+      "source": "kitchen_south",
+      "center": {
+        "x": 31,
+        "y": 1.7,
+        "z": 17
+      },
+      "size": {
+        "x": 16,
+        "y": 3.4,
+        "z": 0.3
+      },
+      "collision": "box"
+    },
+    {
+      "id": "security_utility_0",
+      "source": "security_utility",
+      "center": {
+        "x": 31,
+        "y": 1.7,
+        "z": 18.15
+      },
+      "size": {
+        "x": 0.3,
+        "y": 3.4,
+        "z": 2.3000000000000007
+      },
+      "collision": "box"
+    },
+    {
+      "id": "security_utility_1",
+      "source": "security_utility",
+      "center": {
+        "x": 31,
+        "y": 1.7,
+        "z": 22.35
+      },
+      "size": {
+        "x": 0.3,
+        "y": 3.4,
+        "z": 3.3000000000000007
+      },
+      "collision": "box"
+    },
+    {
+      "id": "south_0",
+      "source": "south",
+      "center": {
+        "x": 4.4,
+        "y": 1.7,
+        "z": 24
+      },
+      "size": {
+        "x": 8.8,
+        "y": 3.4,
+        "z": 0.3
+      },
+      "collision": "box"
+    },
+    {
+      "id": "south_1",
+      "source": "south",
+      "center": {
+        "x": 25.1,
+        "y": 1.7,
+        "z": 24
+      },
+      "size": {
+        "x": 27.799999999999997,
+        "y": 3.4,
+        "z": 0.3
+      },
+      "collision": "box"
+    },
+    {
+      "id": "foyer_west_0",
+      "source": "foyer_west",
+      "center": {
+        "x": 8,
+        "y": 1.7,
+        "z": 27
+      },
+      "size": {
+        "x": 0.3,
+        "y": 3.4,
+        "z": 6
+      },
+      "collision": "box"
+    },
+    {
+      "id": "foyer_east_0",
+      "source": "foyer_east",
+      "center": {
+        "x": 12,
+        "y": 1.7,
+        "z": 27
+      },
+      "size": {
+        "x": 0.3,
+        "y": 3.4,
+        "z": 6
+      },
+      "collision": "box"
+    },
+    {
+      "id": "foyer_south_0",
+      "source": "foyer_south",
+      "center": {
+        "x": 8.4,
+        "y": 1.7,
+        "z": 30
+      },
+      "size": {
+        "x": 0.8000000000000007,
+        "y": 3.4,
+        "z": 0.3
+      },
+      "collision": "box"
+    },
+    {
+      "id": "foyer_south_1",
+      "source": "foyer_south",
+      "center": {
+        "x": 11.600000000000001,
+        "y": 1.7,
+        "z": 30
+      },
+      "size": {
+        "x": 0.7999999999999989,
+        "y": 3.4,
+        "z": 0.3
+      },
+      "collision": "box"
+    },
+    {
+      "id": "gate_0",
+      "source": "gate",
+      "center": {
+        "x": 4.25,
+        "y": 0.9,
+        "z": 44
+      },
+      "size": {
+        "x": 8.5,
+        "y": 1.8,
+        "z": 0.3
+      },
+      "collision": "box"
+    },
+    {
+      "id": "gate_1",
+      "source": "gate",
+      "center": {
+        "x": 18.75,
+        "y": 0.9,
+        "z": 44
+      },
+      "size": {
+        "x": 14.5,
+        "y": 1.8,
+        "z": 0.3
+      },
+      "collision": "box"
+    }
+  ],
+  "objects": [
+    {
+      "id": "meeting_table",
+      "zone": "hall",
+      "center": {
+        "x": 10,
+        "y": 0.375,
+        "z": 14
+      },
+      "radius": 2.5,
+      "height": 0.75,
+      "collision": "cylinder"
+    },
+    {
+      "id": "chair_0",
+      "zone": "hall",
+      "center": {
+        "x": 13.25,
+        "y": 0.45,
+        "z": 14
+      },
+      "size": {
+        "x": 0.55,
+        "y": 0.9,
+        "z": 0.55
+      },
+      "collision": "box"
+    },
+    {
+      "id": "chair_1",
+      "zone": "hall",
+      "center": {
+        "x": 12.29809703885628,
+        "y": 0.45,
+        "z": 16.29809703885628
+      },
+      "size": {
+        "x": 0.55,
+        "y": 0.9,
+        "z": 0.55
+      },
+      "collision": "box"
+    },
+    {
+      "id": "chair_2",
+      "zone": "hall",
+      "center": {
+        "x": 10,
+        "y": 0.45,
+        "z": 17.25
+      },
+      "size": {
+        "x": 0.55,
+        "y": 0.9,
+        "z": 0.55
+      },
+      "collision": "box"
+    },
+    {
+      "id": "chair_3",
+      "zone": "hall",
+      "center": {
+        "x": 7.701902961143721,
+        "y": 0.45,
+        "z": 16.29809703885628
+      },
+      "size": {
+        "x": 0.55,
+        "y": 0.9,
+        "z": 0.55
+      },
+      "collision": "box"
+    },
+    {
+      "id": "chair_4",
+      "zone": "hall",
+      "center": {
+        "x": 6.75,
+        "y": 0.45,
+        "z": 14
+      },
+      "size": {
+        "x": 0.55,
+        "y": 0.9,
+        "z": 0.55
+      },
+      "collision": "box"
+    },
+    {
+      "id": "chair_5",
+      "zone": "hall",
+      "center": {
+        "x": 7.70190296114372,
+        "y": 0.45,
+        "z": 11.70190296114372
+      },
+      "size": {
+        "x": 0.55,
+        "y": 0.9,
+        "z": 0.55
+      },
+      "collision": "box"
+    },
+    {
+      "id": "chair_6",
+      "zone": "hall",
+      "center": {
+        "x": 10,
+        "y": 0.45,
+        "z": 10.75
+      },
+      "size": {
+        "x": 0.55,
+        "y": 0.9,
+        "z": 0.55
+      },
+      "collision": "box"
+    },
+    {
+      "id": "chair_7",
+      "zone": "hall",
+      "center": {
+        "x": 12.298097038856278,
+        "y": 0.45,
+        "z": 11.70190296114372
+      },
+      "size": {
+        "x": 0.55,
+        "y": 0.9,
+        "z": 0.55
+      },
+      "collision": "box"
+    },
+    {
+      "id": "stair_reserve",
+      "zone": "hall",
+      "center": {
+        "x": 10,
+        "y": 1.6,
+        "z": 4
+      },
+      "size": {
+        "x": 10,
+        "y": 3.2,
+        "z": 6
+      },
+      "collision": "box",
+      "status": "reserved",
+      "walkable": false,
+      "notes": "곡선 계단 점유 영역. 상층 연결 미확정. 초기 진입 차단 박스."
+    },
+    {
+      "id": "dining_table",
+      "zone": "dining",
+      "center": {
+        "x": 31,
+        "y": 0.375,
+        "z": 4.5
+      },
+      "size": {
+        "x": 7,
+        "y": 0.75,
+        "z": 2.2
+      },
+      "collision": "box"
+    },
+    {
+      "id": "kitchen_island",
+      "zone": "kitchen",
+      "center": {
+        "x": 31,
+        "y": 0.45,
+        "z": 13
+      },
+      "size": {
+        "x": 5,
+        "y": 0.9,
+        "z": 1.6
+      },
+      "collision": "box"
+    },
+    {
+      "id": "kitchen_counter",
+      "zone": "kitchen",
+      "center": {
+        "x": 34.5,
+        "y": 0.45,
+        "z": 9.8
+      },
+      "size": {
+        "x": 5,
+        "y": 0.9,
+        "z": 0.8
+      },
+      "collision": "box"
+    },
+    {
+      "id": "security_desk",
+      "zone": "security",
+      "center": {
+        "x": 27,
+        "y": 0.6,
+        "z": 18
+      },
+      "size": {
+        "x": 3,
+        "y": 1.2,
+        "z": 0.8
+      },
+      "collision": "box"
+    },
+    {
+      "id": "utility_cabinets",
+      "zone": "utility",
+      "center": {
+        "x": 35,
+        "y": 1,
+        "z": 18.1
+      },
+      "size": {
+        "x": 4,
+        "y": 2,
+        "z": 0.8
+      },
+      "collision": "box"
+    },
+    {
+      "id": "fountain",
+      "zone": "courtyard",
+      "center": {
+        "x": 10,
+        "y": 1.5,
+        "z": 37
+      },
+      "radius": 2.5,
+      "height": 3,
+      "collision": "cylinder"
+    },
+    {
+      "id": "car",
+      "zone": "courtyard",
+      "center": {
+        "x": 18,
+        "y": 0.75,
+        "z": 37
+      },
+      "size": {
+        "x": 2,
+        "y": 1.5,
+        "z": 5
+      },
+      "collision": "box"
+    }
+  ],
+  "openConnections": [
+    [
+      "east_path",
+      "south_path"
+    ],
+    [
+      "south_path",
+      "courtyard"
+    ]
+  ],
+  "spawn": {
+    "x": 10,
+    "y": 0,
+    "z": 28
+  },
+  "loop": [
+    "foyer",
+    "hall",
+    "corridor",
+    "dining",
+    "kitchen",
+    "east_path",
+    "south_path",
+    "courtyard",
+    "foyer"
+  ]
+}

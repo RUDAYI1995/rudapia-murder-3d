@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>걷기 모듈 데모</title>
+<style>
+  html,body{margin:0;height:100%;background:#0b0d12;overflow:hidden;font-family:system-ui,"Malgun Gothic",sans-serif}
+  canvas{display:block;width:100%;height:100%}
+  #hud{position:fixed;left:14px;top:12px;color:#e9e4d8;font-size:13px;line-height:1.6;text-shadow:0 1px 3px #000;pointer-events:none}
+  #hud b{color:#ffd98a}
+  #click{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);padding:10px 18px;background:rgba(0,0,0,.6);color:#fff;border-radius:8px;pointer-events:none}
+</style>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"}}</script>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="hud"><b>WASD</b> 이동 · <b>Shift</b> 달리기 · <b>마우스</b> 시점(클릭하면 고정) · <b>Q/E</b> 카메라 회전 · <b>휠</b> 줌 · <b>R</b> 처음 위치</div>
+<div id="click">클릭해서 시작</div>
+<script type="module">
+import * as THREE from 'three';
+
+/*__WALK_MODULE__*/
+
+// ───────── 데모 월드: 방 2개 + 기둥 + 가구 (충돌 데이터와 눈에 보이는 메시를 같이 만든다) ─────────
+const canvas = document.getElementById('c');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.shadowMap.enabled = true;
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x151a24);
+scene.fog = new THREE.Fog(0x151a24, 18, 55);
+const camera = new THREE.PerspectiveCamera(65, 1, 0.1, 200);
+const resize = () => { renderer.setSize(innerWidth, innerHeight, false); camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); };
+addEventListener('resize', resize); resize();
+
+scene.add(new THREE.HemisphereLight(0xbcc8ff, 0x3a2e28, 0.9));
+const sun = new THREE.DirectionalLight(0xfff0dd, 1.6); sun.position.set(8, 14, 6); sun.castShadow = true;
+sun.shadow.mapSize.set(2048, 2048); Object.assign(sun.shadow.camera, { left: -25, right: 25, top: 25, bottom: -25, far: 60 }); scene.add(sun);
+
+const col = makeColliders();
+const floor = new THREE.Mesh(new THREE.PlaneGeometry(60, 60), new THREE.MeshStandardMaterial({ color: 0x6b6258, roughness: 0.9 }));
+floor.rotation.x = -Math.PI / 2; floor.position.set(10, 0, 10); floor.receiveShadow = true; scene.add(floor);
+const grid = new THREE.GridHelper(60, 60, 0x000000, 0x000000); grid.position.set(10, 0.01, 10); grid.material.opacity = 0.12; grid.material.transparent = true; scene.add(grid);
+
+// 눈에 보이는 박스 + 충돌 박스를 한 번에 만든다. tag 가 'wall' / 'pillar' 면 카메라도 피한다.
+const addBlock = (cx, cz, w, d, h, color, tag) => {
+  const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), new THREE.MeshStandardMaterial({ color, roughness: 0.8 }));
+  m.position.set(cx, h / 2, cz); m.castShadow = m.receiveShadow = true; scene.add(m);
+  col.addCenterBox(cx, cz, w, d, 0, h, tag);
+};
+const WALL = 0xb8ad9c, H = 3.2, T = 0.3;
+// 바깥 벽 (0..20 × 0..20), 남쪽(+z) 벽에 문(폭 2m) 하나
+addBlock(10, 0, 20, T, H, WALL, 'wall'); addBlock(0, 10, T, 20, H, WALL, 'wall'); addBlock(20, 10, T, 20, H, WALL, 'wall');
+addBlock(4.5, 20, 9, T, H, WALL, 'wall'); addBlock(15.5, 20, 9, T, H, WALL, 'wall');
+// 안쪽 칸막이 (문 있음)
+addBlock(5, 10, 10, T, H, WALL, 'wall'); addBlock(17, 10, 6, T, H, WALL, 'wall');
+// 기둥(원 충돌) + 가구(박스 충돌: 카메라는 통과)
+for (const [x, z] of [[6, 5], [14, 5], [6, 15], [14, 15]]) {
+  const p = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.35, H, 20), new THREE.MeshStandardMaterial({ color: 0xd6cdbd, roughness: 0.6 }));
+  p.position.set(x, H / 2, z); p.castShadow = p.receiveShadow = true; scene.add(p); col.addCircle(x, z, 0.35, 'pillar');
+}
+addBlock(10, 15, 2.4, 1.0, 0.8, 0x6a4a32, 'table');
+addBlock(3, 3, 1.6, 0.8, 1.0, 0x4a3a30, 'sofa');
+addBlock(17, 4, 0.8, 2.0, 2.0, 0x4a3a30, 'shelf');
+
+// ───────── 캐릭터 연결 ─────────
+const spawn = { x: 10, z: 24 };
+const hero = new WalkCharacter({
+  col, spawn,
+  bounds: { minX: -8, maxX: 28, minZ: -8, maxZ: 40 },
+  ceilingAt: (x, z) => (x > 0 && x < 20 && z > 0 && z < 20 ? H : null),   // 방 안에서는 카메라가 천장(3.2m)을 뚫지 않음
+  cameraBlockTags: ['wall', 'pillar'],
+});
+hero.addTo(scene);
+const input = bindWalkInput(canvas, hero, { onToggle: code => { if (code === 'KeyR') { hero.x = spawn.x; hero.z = spawn.z; hero.yaw = 0; hero.heading = Math.PI; } } });
+document.addEventListener('pointerlockchange', () => { document.getElementById('click').style.display = document.pointerLockElement === canvas ? 'none' : 'block'; });
+
+let last = performance.now();
+renderer.setAnimationLoop(now => {
+  const dt = Math.min(0.05, (now - last) / 1000); last = now;
+  const i = input.getInput(dt);
+  hero.update(dt, i, i.run);
+  hero.updateCamera(camera, dt);
+  renderer.render(scene, camera);
+});
+</script>
+</body>
+</html>

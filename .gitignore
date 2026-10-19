@@ -1,0 +1,8 @@
+﻿node_modules/
+dist/
+*.zip
+.DS_Store
+Thumbs.db
+public/assets/zone02/*_v1_backup*
+public/assets/zone02/v1_backup_*
+public/assets/zone02/_contact.png

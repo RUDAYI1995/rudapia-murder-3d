@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="UTF-8" /><title>재질 견본</title>
+<style>body{margin:0;background:#111;color:#ddd;font:12px sans-serif}#g{display:flex;flex-wrap:wrap;gap:8px;padding:8px}figure{margin:0}canvas{width:240px;height:240px;display:block;image-rendering:auto}
+#s{position:fixed;right:8px;top:8px;background:#000a;padding:6px}</style></head>
+<body><div id="s">로딩…</div><div id="g"></div>
+<script type="module">
+import { createMaterials } from './src/zone02/materials.js';
+const s = document.getElementById('s'), g = document.getElementById('g');
+const t0 = performance.now();
+const M = await createMaterials(m => { s.textContent = m; });
+s.textContent = `완료 ${(performance.now() - t0 | 0)}ms`;
+for (const [name, mat] of Object.entries(M)) {
+  if (!mat.map) continue;
+  const f = document.createElement('figure');
+  const c = document.createElement('canvas');
+  const img = mat.map.image; c.width = img.width; c.height = img.height;
+  const x = c.getContext('2d');
+  // 2x2 타일링으로 이음새 확인 (데칼은 그대로)
+  if (mat.transparent) { x.fillStyle = '#556'; x.fillRect(0,0,c.width,c.height); x.drawImage(img, 0, 0); }
+  else { c.width = img.width * 2; c.height = img.height * 2; for (let i=0;i<2;i++) for (let j=0;j<2;j++) c.getContext('2d').drawImage(img, i*img.width, j*img.height); }
+  const cap = document.createElement('figcaption'); cap.textContent = name + (mat.userData.tile ? ` (${mat.userData.tile}m)` : '');
+  f.append(c, cap); g.append(f);
+}
+</script></body></html>

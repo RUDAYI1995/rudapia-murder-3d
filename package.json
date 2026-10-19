@@ -1,0 +1,1 @@
+{"name":"rudapia-murder-3d","private":true,"version":"0.0.1","type":"module","scripts":{"dev":"vite --host 127.0.0.1 --port 5174","build":"vite build"},"dependencies":{"three":"^0.186.1","vite":"^8.3.4"},"devDependencies":{"sharp":"^0.35.5"}}

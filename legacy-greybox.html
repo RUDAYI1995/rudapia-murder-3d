@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>루다피아 은밀한 살인 - 맵 프로토타입</title>
+  <style>
+    html, body { margin: 0; height: 100%; background: #05070f; overflow: hidden; font-family: 'Malgun Gothic', system-ui, sans-serif; color: #e9e4d8; }
+    canvas#view { display: block; width: 100vw; height: 100vh; }
+    .hud { position: fixed; pointer-events: none; text-shadow: 0 1px 3px #000; }
+    #help { left: 16px; top: 14px; font-size: 13px; line-height: 1.7; background: rgba(8, 10, 18, 0.55); padding: 10px 14px; border-radius: 8px; }
+    #help b { color: #ffd98a; }
+    #status { left: 16px; bottom: 14px; font-size: 14px; background: rgba(8, 10, 18, 0.55); padding: 8px 14px; border-radius: 8px; }
+    #minimap { right: 16px; top: 14px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.18); background: #000; }
+    #click { left: 50%; top: 50%; transform: translate(-50%, -50%); font-size: 20px; background: rgba(8,10,18,0.7); padding: 14px 24px; border-radius: 10px; }
+  </style>
+</head>
+<body>
+  <canvas id="view"></canvas>
+  <div id="help" class="hud">
+    <b>루다피아 은밀한 살인</b> · 맵 프로토타입<br />
+    <b>WASD</b> 이동 · <b>Shift</b> 달리기 · <b>마우스</b> 시점 (클릭하면 고정)<br />
+    <b>Q/E</b> 시점 회전 · <b>휠</b> 줌 · <b>N</b> 낮/밤 · <b>F</b> 손전등 · <b>T</b> 도구 위치
+  </div>
+  <canvas id="minimap" class="hud" width="200" height="200"></canvas>
+  <div id="status" class="hud"></div>
+  <div id="click" class="hud">클릭해서 시작</div>
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
