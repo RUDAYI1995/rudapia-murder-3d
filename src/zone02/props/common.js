@@ -99,7 +99,7 @@ export function createKit(M, ctx, g) {
     g.add(grp);
     box(w + 0.16, h + 0.16, 0.05, M.brass, 0, 0, 0.025, grp, false);
     box(w + 0.04, h + 0.04, 0.06, M.darkWood, 0, 0, 0.028, grp, false);
-    const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshStandardMaterial({ map: paintingTex(seed), roughness: 0.55 }));
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshStandardMaterial({ map: ctx.horror ? M.horrorPortrait : paintingTex(seed), roughness: ctx.horror ? 0.92 : 0.55 }));
     m.position.z = 0.062; grp.add(m);
     return grp;
   };
@@ -149,7 +149,7 @@ export function createKit(M, ctx, g) {
     grp.position.set(x, y, z);
     grp.rotation.y = { south: 0, east: Math.PI / 2, north: Math.PI, west: -Math.PI / 2 }[dir];
     g.add(grp);
-    const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshStandardMaterial({ name: 'tapestryImage', map: tex ?? tapestryTexFallback, roughness: 0.96 }));
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshStandardMaterial({ name: 'tapestryImage', map: tex ?? tapestryTexFallback, color: ctx.horror ? 0x323b3e : 0xffffff, roughness: 0.96 }));
     m.position.z = 0.03; m.receiveShadow = true; grp.add(m);
     const rod = cyl(0.015, 0.015, w + 0.2, M.gold, 0, h / 2 + 0.02, 0.05, grp, 8, false); rod.rotation.z = Math.PI / 2;
     sph(0.03, M.gold, -(w / 2 + 0.1), h / 2 + 0.02, 0.05, grp, false); sph(0.03, M.gold, w / 2 + 0.1, h / 2 + 0.02, 0.05, grp, false);

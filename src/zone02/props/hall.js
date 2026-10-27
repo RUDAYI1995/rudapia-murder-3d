@@ -13,10 +13,12 @@ export function buildHall(k) {
 
   // 이미지 바닥과 어울리도록 대리석 바탕 색을 맞춘다. 새 메달리온(v2)의 밝은 대리석은 중성에 가까운 크림색(약 200,190,178)이라
   // 예전 따뜻한 베이지(0xd9c7be)는 문양보다 누렇고 어두워 보였다 → 더 밝고 중성인 색
-  M.marble.color.setHex(A?.floorHQ ? 0xe8e0d8 : 0xe2cdb6);
+  M.marble.color.setHex(ctx.horror ? 0x999c9c : A?.floorHQ ? 0xe8e0d8 : 0xe2cdb6);
 
   // ───────── 바닥: 고화질 메달리온(이미지) > 이전 이미지 > 절차적 데칼 ─────────
-  if (A?.floorHQ) {
+  if (ctx.horror) {
+    // 공포 시안에서는 공통 바닥 메시의 Higgsfield 재질을 그대로 노출한다.
+  } else if (A?.floorHQ) {
     const f = A.floorHQ;
     const mat = new THREE.MeshStandardMaterial({
       name: 'hallFloorHQ', map: f.map, normalMap: f.normalMap, normalScale: new THREE.Vector2(0.35, 0.35),
@@ -74,7 +76,7 @@ export function buildHall(k) {
     const leg = box(0.24, 0.12, 1.2, M.walnut, TC.x + Math.cos(a) * 0.78, 0.07, TC.z + Math.sin(a) * 0.78, g);
     leg.rotation.y = -a + Math.PI / 2;
   }
-  vase(TC.x, 0.75, TC.z, 2.0, M.ceramic, true, g, 34); // 큰 꽃다발
+  if (!ctx.horror) vase(TC.x, 0.75, TC.z, 2.0, M.ceramic, true, g, 34);
   for (let i = 0; i < 12; i++) {
     const a = (i / 12) * Math.PI * 2 + 0.1;
     const px = TC.x + Math.cos(a) * 1.9, pz = TC.z + Math.sin(a) * 1.9;
@@ -231,7 +233,7 @@ export function buildHall(k) {
     for (const z of [7.82, 10.3, 17.3, 20.2]) sconce(IN, 2.4, z, 'east', Z, HL);
     for (const z of [9, 18.5]) {
       const [cx, cz] = consoleT(IN, z, 'east');
-      vase(cx, 0.9, cz, 1.1, M.ceramic, true, g, 20);
+      if (!ctx.horror) vase(cx, 0.9, cz, 1.1, M.ceramic, true, g, 20);
     }
   } else {
     for (const z of [0.5, 4.4, 7.6, 10.4, 13.6, 16.4, 19.6, 23.5]) pilaster(IN, z, 'east');
@@ -239,7 +241,7 @@ export function buildHall(k) {
     for (const z of [6, 12, 18]) {
       tapestry(IN + 0.02, 2.1, z, 1.05, 2.3, 'east', A?.tapestry);
       const [cx, cz] = consoleT(IN, z, 'east');
-      vase(cx, 0.9, cz, 1.1, M.ceramic, true, g, 20);
+      if (!ctx.horror) vase(cx, 0.9, cz, 1.1, M.ceramic, true, g, 20);
       sconce(IN, 2.2, z - 1.0, 'east', Z, HL); sconce(IN, 2.2, z + 1.0, 'east', Z, HL);
     }
   }
@@ -265,7 +267,7 @@ export function buildHall(k) {
     for (const z of [7.77, 10.25, 17.3, 20.2]) sconce(20 - IN, 2.4, z, 'west', Z, HL);
     for (const z of [9, 18.5]) {
       const [cx, cz] = consoleT(20 - IN, z, 'west');
-      vase(cx, 0.9, cz, 1.1, M.ceramic, true, g, 20);
+      if (!ctx.horror) vase(cx, 0.9, cz, 1.1, M.ceramic, true, g, 20);
     }
   } else {
     for (const z of [0.5, 7.2, 10.8, 16.4, 20.6, 23.5]) pilaster(20 - IN, z, 'west');
@@ -273,7 +275,7 @@ export function buildHall(k) {
     for (const z of [9, 18.5]) {
       tapestry(20 - IN - 0.02, 2.1, z, 1.05, 2.3, 'west', A?.tapestry);
       const [cx, cz] = consoleT(20 - IN, z, 'west');
-      vase(cx, 0.9, cz, 1.1, M.ceramic, true, g, 20);
+      if (!ctx.horror) vase(cx, 0.9, cz, 1.1, M.ceramic, true, g, 20);
       sconce(20 - IN, 2.2, z - 1.0, 'west', Z, HL); sconce(20 - IN, 2.2, z + 1.0, 'west', Z, HL);
     }
     sconce(20 - IN, 2.4, 2.4, 'west', Z, HL); sconce(20 - IN, 2.4, 7.6, 'west', Z, HL);
@@ -377,7 +379,7 @@ export function buildHall(k) {
       if (tx) art(x, 2.55, 24 - IN - 0.02, 1.05, 1.3, 'north', tx, { glow: 0.1 });
     }
     const [cx, cz] = consoleT(x, 24 - IN, 'north');
-    vase(cx, 0.9, cz, 1.1, M.ceramic, true, g, 20);
+    if (!ctx.horror) vase(cx, 0.9, cz, 1.1, M.ceramic, true, g, 20);
     if (!SW) { sconce(x - 1.0, 2.5, 24 - IN, 'north', Z, HL); sconce(x + 1.0, 2.5, 24 - IN, 'north', Z, HL); }
   }
   // 계단 아래 흉상 받침대 + 램프
@@ -395,5 +397,5 @@ export function buildHall(k) {
     solid(x, 7.7, 0.56, 0.56, 1.6, 'pedestal');
   }
   // 장식 소나무
-  [[1.2, 22.8], [18.8, 22.8], [1.2, 1.4], [18.8, 1.4], [7.6, 23.0], [12.4, 23.0], [1.2, 9.0], [18.7, 15.6]].forEach(([x, z]) => tree(x, z, 1.35));
+  if (!ctx.horror) [[1.2, 22.8], [18.8, 22.8], [1.2, 1.4], [18.8, 1.4], [7.6, 23.0], [12.4, 23.0], [1.2, 9.0], [18.7, 15.6]].forEach(([x, z]) => tree(x, z, 1.35));
 }

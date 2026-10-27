@@ -13,10 +13,12 @@ import { auditTexelDensity } from './audit.js';
 import { Meeting } from './meeting.js';
 import { createVoice } from './voice.js';
 import { Game } from './game/game.js';
+import { createReferenceWorld, configureReferenceView } from './reconstruction/scene.js';
 
 const $ = id => document.getElementById(id);
 const canvas = $('view');
 const params = new URLSearchParams(location.search);
+const HORROR = ['horror', 'reference'].includes(params.get('look'));
 const QUALITY = params.get('q') ?? 'high'; // high | low
 
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: false, powerPreference: 'high-performance' });
@@ -41,6 +43,9 @@ scene.environmentIntensity = 0.2;
 const C = hex => new THREE.Color(hex);
 const DAY = { fog: C(0xb9c9d8), fogD: 0.006, bg: C(0x9fc0e0), sun: C(0xfff0d8), sunI: 2.6, hemiS: C(0xcfe2ff), hemiG: C(0x66624e), hemiI: 0.7, env: 0.55, exposure: 0.8, bloom: 0.18, sunDir: new THREE.Vector3(-0.35, 0.8, -0.45) };
 const NIGHT = { fog: C(0x0d1528), fogD: 0.011, bg: C(0x0a1122), sun: C(0x8eaeff), sunI: 2.4, hemiS: C(0x2e4070), hemiG: C(0x1c1c28), hemiI: 0.85, env: 0.42, exposure: 1.05, bloom: 0.35, sunDir: new THREE.Vector3(-0.45, 0.72, -0.55) };
+if (HORROR) {
+  Object.assign(NIGHT, { bg:C(0x668697), fog: C(0x273e4d), fogD: 0.026, hemiS: C(0xa3bbca), hemiG: C(0x333c3e), hemiI: 0.3, env: 0.12, exposure: .85, bloom: 0.12, sunI: 0.08 });
+}
 
 const hemi = new THREE.HemisphereLight(0xffffff, 0x444444, 1);
 scene.add(hemi);
@@ -104,10 +109,16 @@ const grade = new ShaderPass({
     }`,
 });
 composer.addPass(grade);
+if (HORROR) { grade.uniforms.grain.value = 0.008; grade.uniforms.ca.value = 0.15; grade.uniforms.sat.value = 0.75; }
 composer.addPass(new OutputPass());
 
 function resize() {
   w = window.innerWidth; h = window.innerHeight;
+  // 실제 원본(1344×768)의 구도를 패널 크기와 무관하게 보존한다. 나머지는 여백으로 둔다.
+  if (HORROR) {
+    w = Math.min(w, h * 1344 / 768); h = w * 768 / 1344;
+    canvas.style.cssText = `position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:${w}px;height:${h}px`;
+  }
   renderer.setSize(w, h, false);
   composer.setSize(w, h);
   camera.aspect = w / h;
@@ -118,10 +129,21 @@ resize();
 
 // ── 월드 ──
 const loading = $('loading');
-const world = await createWorld(scene, msg => { loading.textContent = msg; });
-const hero = new Hero(world.colliders, layout.spawn, world.bounds); // 기본 인물 모형 (다른 인물과 같음). 시트 기반 모델은 heroModel.js 에 보관
+let world;
+try {
+  world = HORROR
+    ? await createReferenceWorld(scene, msg => { loading.textContent = msg; })
+    : await createWorld(scene, msg => { loading.textContent = msg; });
+} catch (error) {
+  loading.textContent = '맵을 불러오지 못했습니다. 재질 파일과 개발 서버 연결을 확인한 뒤 새로고침해 주세요.';
+  console.error('월드 로딩 실패', error);
+  throw error;
+}
+const previewSpawn = HORROR ? world.spawn : layout.spawn;
+const hero = new Hero(world.colliders, previewSpawn, world.bounds, HORROR ? world.avatar : null);
 hero.addTo(scene);
-hero.yaw = 0;
+hero.yaw = HORROR ? -0.32 : 0;
+if (HORROR) { hero.heading = Math.PI + hero.yaw; hero.pitch = 0.08; hero.dist = 2.5; hero.flashOn = true; }
 loading.style.display = 'none';
 
 // ── 미니맵 (레이아웃 JSON 에서 직접 그림) ──
@@ -167,6 +189,7 @@ const bigText = $('bigText');
 let bigTextTimer = 0;
 const meeting = new Meeting({
   scene, hero, col: world.colliders, bounds: world.bounds,
+  npcCount: HORROR ? 0 : undefined,
   onToast: toast,
   onText: t => {
     clearTimeout(bigTextTimer);
@@ -175,6 +198,7 @@ const meeting = new Meeting({
 });
 // 마피아 게임(낮 → 투표 → 밤 사냥 → 아침). 시작 버튼은 화면 왼쪽 위.
 const game = new Game({ scene, camera, hero, meeting, world, setNight: v => { nightTarget = v; }, getNight: () => night, toast, renderer });
+const referenceView = HORROR ? configureReferenceView(hero, game, world, camera) : null;
 const chatInput = $('chatInput');
 function sendCommand(text) { if (game.active) { game.humanSay(text); return; } meeting.say(text); } // 게임 중에는 채팅 = 말하기
 $('chatForm').addEventListener('submit', e => { e.preventDefault(); const v = chatInput.value.trim(); chatInput.value = ''; chatInput.blur(); if (v) sendCommand(v); });
@@ -230,15 +254,15 @@ const clickHint = $('click');
 window.addEventListener('keydown', e => {
   if (e.target instanceof HTMLInputElement) { if (e.code === 'Escape') e.target.blur(); return; } // 명령 입력 중에는 이동 키로 취급하지 않는다
   if (e.repeat) return;
-  if (e.code === 'Enter') { e.preventDefault(); keys.clear(); document.exitPointerLock?.(); chatInput.focus(); return; }
+  if (e.code === 'Enter') { if (HORROR) return; e.preventDefault(); keys.clear(); document.exitPointerLock?.(); chatInput.focus(); return; }
   if (game.active && ['Space', 'KeyC', 'KeyV', 'KeyG', 'KeyJ', 'KeyP', 'KeyX'].includes(e.code) && game.key(e.code)) { e.preventDefault(); return; } // 직업 행동 키
-  if (e.code === 'KeyM') { toggleMap(); return; }
+  if (e.code === 'KeyM') { if (!HORROR) toggleMap(); return; }
   if (e.code === 'Escape' && bigmap.isOpen) { closeMap(); return; }
   keys.add(e.code);
   if (e.code === 'KeyN') nightTarget = nightTarget > 0.5 ? 0 : 1;
   if (e.code === 'KeyF') hero.flashOn = !hero.flashOn;
   if (e.code === 'KeyO') { overview = !overview; world.setOverview(overview); }
-  if (e.code === 'KeyR') { hero.x = layout.spawn.x; hero.z = layout.spawn.z; hero.yaw = 0; hero.heading = Math.PI; }
+  if (e.code === 'KeyR' && !HORROR) { hero.x = previewSpawn.x; hero.z = previewSpawn.z; hero.yaw = 0; hero.heading = Math.PI; }
 });
 window.addEventListener('keyup', e => keys.delete(e.code));
 canvas.addEventListener('click', () => { if (!locked) canvas.requestPointerLock?.(); });
@@ -274,6 +298,7 @@ function applyLighting(dt) {
   grade.uniforms.vig.value = THREE.MathUtils.lerp(0.2, 0.3, night);
   grade.uniforms.lift.value = THREE.MathUtils.lerp(0.003, 0.008, night);
   grade.uniforms.teal.value = THREE.MathUtils.lerp(0.2, 0.6, night);
+  if (HORROR) { grade.uniforms.vig.value = 0.05; grade.uniforms.lift.value = 0.002; grade.uniforms.teal.value = 0.25; }
   tmpC.copy(DAY.sunDir).lerp(NIGHT.sunDir, night).normalize();
   return tmpC;
 }
@@ -300,7 +325,8 @@ function tick(dt) {
   else if (game.heroBusy()) hero.autoStep(dt); // 게임 연출/선택 중: 조작 잠금
   else hero.update(dt, { f, r }, game.filterRun(keys.has('ShiftLeft') || keys.has('ShiftRight'), dt));
   if (overview) { camera.position.lerp(ovPos, Math.min(1, dt * 4)); camera.lookAt(ovLook); }
-  else { hero.updateCamera(camera, dt); game.afterCamera(camera, dt); }
+  else if (!referenceView?.updateCamera()) { hero.updateCamera(camera, dt); game.afterCamera(camera, dt); }
+  referenceView?.pose();
 
   sun.position.set(hero.x, 0, hero.z).addScaledVector(sunDirV, 70);
   sun.target.position.set(hero.x, 0, hero.z);

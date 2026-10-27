@@ -1,0 +1,65 @@
+{
+  "description": "원본 중앙 홀 재현을 위해 직접 제작한 독립 3D 모델",
+  "models": [
+    {
+      "name": "round-table",
+      "file": "round-table.glb",
+      "bytes": 395212,
+      "triangles": 12300
+    },
+    {
+      "name": "spindle-chair",
+      "file": "spindle-chair.glb",
+      "bytes": 138736,
+      "triangles": 4104
+    },
+    {
+      "name": "aged-chandelier",
+      "file": "aged-chandelier.glb",
+      "bytes": 907684,
+      "triangles": 32528
+    },
+    {
+      "name": "paneled-sideboard",
+      "file": "paneled-sideboard.glb",
+      "bytes": 149932,
+      "triangles": 2196
+    },
+    {
+      "name": "arched-window",
+      "file": "arched-window.glb",
+      "bytes": 110604,
+      "triangles": 2485
+    },
+    {
+      "name": "molded-door-frame",
+      "file": "molded-door-frame.glb",
+      "bytes": 46172,
+      "triangles": 396
+    },
+    {
+      "name": "wall-lantern",
+      "file": "wall-lantern.glb",
+      "bytes": 50652,
+      "triangles": 616
+    },
+    {
+      "name": "tripod-work-light",
+      "file": "tripod-work-light.glb",
+      "bytes": 30988,
+      "triangles": 320
+    },
+    {
+      "name": "security-monitor",
+      "file": "security-monitor.glb",
+      "bytes": 63280,
+      "triangles": 1808
+    },
+    {
+      "name": "survivor",
+      "file": "survivor.glb",
+      "bytes": 476384,
+      "triangles": 15816
+    }
+  ]
+}

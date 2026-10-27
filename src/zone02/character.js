@@ -178,7 +178,7 @@ export class Hero {
     this.model.position.set(this.x, 0, this.z);
     this.model.rotation.y = this.heading;
 
-    this.flash.intensity = this.flashOn ? 140 : 0;
+    this.flash.intensity = this.flashOn ? (this.flashPower ?? 140) : 0;
     this.flash.position.set(this.x + Math.sin(this.heading) * 0.2, 1.45, this.z + Math.cos(this.heading) * 0.2);
     this.flashTarget.position.set(this.x + Math.sin(this.heading) * 8, 0.6, this.z + Math.cos(this.heading) * 8);
   }

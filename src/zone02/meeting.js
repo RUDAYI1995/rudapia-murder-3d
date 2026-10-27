@@ -77,12 +77,12 @@ class Actor {
 }
 
 export class Meeting {
-  constructor({ scene, hero, col, bounds, onText, onToast }) {
+  constructor({ scene, hero, col, bounds, onText, onToast, npcCount = HOMES.length }) {
     this.scene = scene; this.hero = hero; this.col = col; this.bounds = bounds;
     this.onText = onText ?? (() => {}); this.onToast = onToast ?? (() => {});
     this.state = 'idle';   // idle | gathering | seated | reasoning | dispersing
     this.timer = 0;
-    this.npcs = HOMES.map((h, i) => {
+    this.npcs = HOMES.slice(0, npcCount).map((h, i) => {
       const model = buildModel({ colors: LOOKS[i % LOOKS.length] }); scene.add(model);
       const t = { x: h.x, z: h.z, heading: Math.atan2(TC.x - h.x, TC.z - h.z) + (i % 2 ? 0.5 : -0.5), speed: 0, sit: 0, phase: 0, model };
       // 다른 사람(플레이어)이 NPC 를 뚫고 지나가지 않게 충돌 원으로 등록(위치는 매 프레임 갱신)

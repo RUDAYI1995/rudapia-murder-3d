@@ -7,18 +7,20 @@ import { LightPool } from './lights.js';
 import { layout, zoneIdAt } from './zones.js';
 import { batchStatic } from './batch.js';
 import { loadAssets } from './assets.js';
+import { prepareHorrorMaterials, buildHorrorDetails } from './horror.js';
 
 const countMeshes = root => { let n = 0; root.traverse(o => { if (o.isMesh) n++; }); return n; };
 
-export async function createWorld(scene, onProgress = () => {}) {
+export async function createWorld(scene, onProgress = () => {}, { horror = false } = {}) {
   const M = await createMaterials(onProgress);
   onProgress('건물 짓는 중…');
   await new Promise(r => setTimeout(r, 0));
 
-  const assets = await loadAssets(onProgress); // ChatGPT 이미지에서 추출한 텍스처 (없으면 null → 절차적 재질)
+  const assets = horror ? null : await loadAssets(onProgress);
+  if (horror) await prepareHorrorMaterials(M, onProgress);
   const col = makeColliders();
   const pool = new LightPool(scene, 22);
-  const ctx = { M, col, pool, windows: [], updaters: [], zoneIdAt, assets };
+  const ctx = { M, col, pool, windows: [], updaters: [], zoneIdAt, assets, horror };
   const root = new THREE.Group();
   scene.add(root);
 
@@ -55,6 +57,8 @@ export async function createWorld(scene, onProgress = () => {}) {
   ];
   for (const [zone, x, y, z] of FILL) pool.add({ x, y, z, zone, color: 0xffd7a6, intensity: 38, distance: 13, flicker: 0, alwaysOn: true });
   for (const [zone, x, y, z] of FILL_OUT) pool.add({ x, y, z, zone, color: 0x9db8ff, intensity: 30, distance: 18, flicker: 0, alwaysOn: true });
+
+  if (horror) buildHorrorDetails(ctx, root);
 
   onProgress('최적화(정적 메시 병합) 중…');
   await new Promise(r => setTimeout(r, 0));
